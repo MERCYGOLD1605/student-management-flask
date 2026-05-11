@@ -22,6 +22,38 @@ def index():
 
     return render_template("index.html", students=students)
 
+# 🔍 Search student
+@app.route('/search', methods=['POST'])
+def search_student():
+    query = request.form['query'].lower()
+
+    students = []
+    filtered_students = []
+
+    try:
+        with open("students.txt", "r") as file:
+            for line in file.readlines():
+                name, age, course = line.strip().split(",")
+
+                student = {
+                    "name": name,
+                    "age": age,
+                    "course": course
+                }
+
+                students.append(student)
+
+                # 🔥 Partial match
+                if query in name.lower():
+                    filtered_students.append(student)
+
+    except:
+        pass
+
+    return render_template(
+        "index.html",
+        students=filtered_students
+    )
 
 # ➕ Add student
 @app.route('/add', methods=['POST'])
