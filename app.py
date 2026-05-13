@@ -12,22 +12,28 @@ def index():
         with open("students.txt", "r") as file:
             for line in file.readlines():
                 name, age, course = line.strip().split(",")
+
                 students.append({
                     "name": name,
                     "age": age,
                     "course": course
                 })
+
     except:
         pass
 
-    return render_template("index.html", students=students)
+    return render_template(
+        "index.html",
+        students=students,
+        total_students=len(students)
+    )
+
 
 # 🔍 Search student
 @app.route('/search', methods=['POST'])
 def search_student():
     query = request.form['query'].lower()
 
-    students = []
     filtered_students = []
 
     try:
@@ -41,8 +47,6 @@ def search_student():
                     "course": course
                 }
 
-                students.append(student)
-
                 # 🔥 Partial match
                 if query in name.lower():
                     filtered_students.append(student)
@@ -52,8 +56,10 @@ def search_student():
 
     return render_template(
         "index.html",
-        students=filtered_students
+        students=filtered_students,
+        total_students=len(filtered_students)
     )
+
 
 # ➕ Add student
 @app.route('/add', methods=['POST'])
@@ -71,6 +77,7 @@ def add_student():
 # ❌ Delete student
 @app.route('/delete/<int:index>')
 def delete_student(index):
+
     with open("students.txt", "r") as file:
         students = file.readlines()
 
@@ -81,6 +88,7 @@ def delete_student(index):
 
     return redirect('/')
 
+
 # ✏️ Update student
 @app.route('/update/<int:index>', methods=['GET', 'POST'])
 def update_student(index):
@@ -89,6 +97,7 @@ def update_student(index):
         students = file.readlines()
 
     if request.method == 'POST':
+
         name = request.form['name']
         age = request.form['age']
         course = request.form['course']
@@ -114,6 +123,7 @@ def update_student(index):
         student=student,
         index=index
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
