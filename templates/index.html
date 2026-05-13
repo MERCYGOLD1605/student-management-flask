@@ -84,7 +84,8 @@
             <td>{{ student.course }}</td>
 
             <td>
-                <a href="/delete/{{ loop.index0 }}">Delete</a>
+               <a href="/update/{{ loop.index0 }}">Edit</a> |
+               <a href="/delete/{{ loop.index0 }}">Delete</a>
             </td>
         </tr>
         {% endfor %}

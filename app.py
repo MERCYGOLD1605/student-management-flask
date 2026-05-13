@@ -81,6 +81,39 @@ def delete_student(index):
 
     return redirect('/')
 
+# ✏️ Update student
+@app.route('/update/<int:index>', methods=['GET', 'POST'])
+def update_student(index):
+
+    with open("students.txt", "r") as file:
+        students = file.readlines()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        age = request.form['age']
+        course = request.form['course']
+
+        students[index] = f"{name},{age},{course}\n"
+
+        with open("students.txt", "w") as file:
+            file.writelines(students)
+
+        return redirect('/')
+
+    # Existing student data
+    name, age, course = students[index].strip().split(",")
+
+    student = {
+        "name": name,
+        "age": age,
+        "course": course
+    }
+
+    return render_template(
+        "update.html",
+        student=student,
+        index=index
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
